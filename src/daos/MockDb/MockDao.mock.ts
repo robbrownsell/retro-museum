@@ -1,15 +1,15 @@
 import jsonfile from 'jsonfile';
-import { IUser } from '@entities/User';
+import { IComputer } from '@entities/Computer';
 
 
 interface IDatabase {
-    users: IUser[];
+    computers: IComputer[];
 }
 
 
 class MockDaoMock {
 
-    private readonly dbFilePath = 'src/daos/MockDb/MockDb.json';
+    private readonly dbFilePath = 'src/daos/MockDb/MockComputerDb.json';
 
 
     protected openDb(): Promise<IDatabase> {

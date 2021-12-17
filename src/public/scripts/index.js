@@ -1,51 +1,51 @@
 /******************************************************************************
- *                          Fetch and display users
+ *                          Fetch and display computers
  ******************************************************************************/
 
-displayUsers();
+displayComputers();
 
 
-function displayUsers() {
-    httpGet('/api/users/all')
+function displayComputers() {
+    httpGet('/api/computers/all')
         .then(response => response.json())
         .then((response) => {
-            var allUsers = response.users;
+            const allComputers = response.computers
             // Empty the anchor
-            var allUsersAnchor = document.getElementById('all-users-anchor');
-            allUsersAnchor.innerHTML = '';
-            // Append users to anchor
-            allUsers.forEach((user) => {
-                allUsersAnchor.innerHTML += getUserDisplayEle(user);
+            var allComputersAnchor = document.getElementById('all-computers-anchor');
+            allComputersAnchor.innerHTML = '';
+            // Append computers to anchor
+            allComputers.forEach((computer) => {
+                allComputersAnchor.innerHTML += getComputerDisplayEle(computer);
             });
         });
 };
 
 
-function getUserDisplayEle(user) {
-    return `<div class="user-display-ele">
+function getComputerDisplayEle(computer) {
+    return `<div class="computer-display-ele">
 
         <div class="normal-view">
-            <div>Name: ${user.name}</div>
-            <div>Email: ${user.email}</div>
-            <button class="edit-user-btn" data-user-id="${user.id}">
+            <div>Name: ${computer.name}</div>
+            <div>description: ${computer.description}</div>
+            <button class="edit-computer-btn" data-computer-id="${computer.id}">
                 Edit
             </button>
-            <button class="delete-user-btn" data-user-id="${user.id}">
+            <button class="delete-computer-btn" data-computer-id="${computer.id}">
                 Delete
             </button>
         </div>
         
         <div class="edit-view">
             <div>
-                Name: <input class="name-edit-input" value="${user.name}">
+                Name: <input class="name-edit-input" value="${computer.name}">
             </div>
             <div>
-                Email: <input class="email-edit-input" value="${user.email}">
+                Description: <input class="description-edit-input" value="${computer.description}">
             </div>
-            <button class="submit-edit-btn" data-user-id="${user.id}">
+            <button class="submit-edit-btn" data-computer-id="${computer.id}">
                 Submit
             </button>
-            <button class="cancel-edit-btn" data-user-id="${user.id}">
+            <button class="cancel-edit-btn" data-computer-id="${computer.id}">
                 Cancel
             </button>
         </div>
@@ -54,82 +54,82 @@ function getUserDisplayEle(user) {
 
 
 /******************************************************************************
- *                        Add, Edit, and Delete Users
+ *                        Add, Edit, and Delete computers
  ******************************************************************************/
 
 document.addEventListener('click', function (event) {
     event.preventDefault();
     var ele = event.target;
-    if (ele.matches('#add-user-btn')) {
-        addUser();
-    } else if (ele.matches('.edit-user-btn')) {
+    if (ele.matches('#add-computer-btn')) {
+        addComputer();
+    } else if (ele.matches('.edit-computer-btn')) {
         showEditView(ele.parentNode.parentNode);
     } else if (ele.matches('.cancel-edit-btn')) {
         cancelEdit(ele.parentNode.parentNode);
     } else if (ele.matches('.submit-edit-btn')) {
         submitEdit(ele);
-    } else if (ele.matches('.delete-user-btn')) {
-        deleteUser(ele);
+    } else if (ele.matches('.delete-computer-btn')) {
+        deleteComputer(ele);
     }
 }, false)
 
 
-function addUser() {
+function addComputer() {
     var nameInput = document.getElementById('name-input');
-    var emailInput = document.getElementById('email-input');
+    var descriptionInput = document.getElementById('description-input');
     var data = {
-        user: {
+        computer: {
             name: nameInput.value,
-            email: emailInput.value
+            description: descriptionInput.value
         },
     };
-    httpPost('/api/users/add', data)
+    httpPost('/api/computers/add', data)
         .then(() => {
-            displayUsers();
+            displayComputers();
         })
 }
 
 
-function showEditView(userEle) {
-    var normalView = userEle.getElementsByClassName('normal-view')[0];
-    var editView = userEle.getElementsByClassName('edit-view')[0];
+function showEditView(computerEle) {
+    var normalView = computerEle.getElementsByClassName('normal-view')[0];
+    var editView = computerEle.getElementsByClassName('edit-view')[0];
     normalView.style.display = 'none';
     editView.style.display = 'block';
 }
 
 
-function cancelEdit(userEle) {
-    var normalView = userEle.getElementsByClassName('normal-view')[0];
-    var editView = userEle.getElementsByClassName('edit-view')[0];
+function cancelEdit(computerEle) {
+    var normalView = computerEle.getElementsByClassName('normal-view')[0];
+    var editView = computerEle.getElementsByClassName('edit-view')[0];
     normalView.style.display = 'block';
     editView.style.display = 'none';
 }
 
 
 function submitEdit(ele) {
-    var userEle = ele.parentNode.parentNode;
-    var nameInput = userEle.getElementsByClassName('name-edit-input')[0];
-    var emailInput = userEle.getElementsByClassName('email-edit-input')[0];
-    var id = ele.getAttribute('data-user-id');
+    var computerEle = ele.parentNode.parentNode;
+    var nameInput = computerEle.getElementsByClassName('name-edit-input')[0];
+    var descriptionInput = computerEle.getElementsByClassName('description-edit-input')[0];
+    var id = ele.getAttribute('data-computer-id');
     var data = {
-        user: {
+        computer: {
             name: nameInput.value,
-            email: emailInput.value,
+            description: descriptionInput.value,
             id: id
         }
     };
-	httpPut('/api/users/update', data)
+	httpPut('/api/computers/update', data)
         .then(() => {
-            displayUsers();
+            displayComputers();
         })
 }
 
 
-function deleteUser(ele) {
-    var id = ele.getAttribute('data-user-id');
-	httpDelete('/api/users/delete/' + id)
+function deleteComputer(ele) {
+    var id = ele.getAttribute('data-computer-id');
+	httpDelete('/api/computers/delete/' + id)
         .then(() => {
-            displayUsers();
+            displayComputers();
         })
 }
 

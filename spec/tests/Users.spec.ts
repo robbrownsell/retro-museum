@@ -3,8 +3,8 @@ import StatusCodes from 'http-status-codes';
 import { SuperTest, Test } from 'supertest';
 
 import app from '@server';
-import UserDao from '@daos/User/UserDao.mock';
-import User, { IUser } from '@entities/User';
+import ComputerDao from '@daos/Computer/ComputerDao.mock';
+import User, { IComputer } from '@entities/User';
 import { pErr } from '@shared/functions';
 import { paramMissingError } from '@shared/constants';
 import { IReqBody, IResponse } from '../support/types';
@@ -37,15 +37,15 @@ describe('Users Routes', () => {
                 new User('John Smith', 'john.smith@gmail.com'),
                 new User('Gordan Freeman', 'gordan.freeman@gmail.com'),
             ];
-            spyOn(UserDao.prototype, 'getAll').and.returnValue(Promise.resolve(users));
+            spyOn(ComputerDao.prototype, 'getAll').and.returnValue(Promise.resolve(users));
             // Call API
             agent.get(getUsersPath)
                 .end((err: Error, res: IResponse) => {
                     pErr(err);
                     expect(res.status).toBe(OK);
-                    // Caste instance-objects to 'User' objects
+                    // Caste instance-objects to 'Computer' objects
                     const respUsers = res.body.users;
-                    const retUsers: User[] = respUsers.map((user: IUser) => {
+                    const retUsers: User[] = respUsers.map((user: IComputer) => {
                         return new User(user);
                     });
                     expect(retUsers).toEqual(users);
@@ -58,7 +58,7 @@ describe('Users Routes', () => {
             "${BAD_REQUEST}" if the request was unsuccessful.`, (done) => {
             // Setup spy
             const errMsg = 'Could not fetch users.';
-            spyOn(UserDao.prototype, 'getAll').and.throwError(errMsg);
+            spyOn(ComputerDao.prototype, 'getAll').and.throwError(errMsg);
             // Call API
             agent.get(getUsersPath)
                 .end((err: Error, res: IResponse) => {
@@ -83,7 +83,7 @@ describe('Users Routes', () => {
 
         it(`should return a status code of "${CREATED}" if the request was successful.`, (done) => {
             // Setup Spy
-            spyOn(UserDao.prototype, 'add').and.returnValue(Promise.resolve());
+            spyOn(ComputerDao.prototype, 'add').and.returnValue(Promise.resolve());
             // Call API
             agent.post(addUsersPath).type('form').send(userData)
                 .end((err: Error, res: IResponse) => {
@@ -110,7 +110,7 @@ describe('Users Routes', () => {
             if the request was unsuccessful.`, (done) => {
             // Setup spy
             const errMsg = 'Could not add user.';
-            spyOn(UserDao.prototype, 'add').and.throwError(errMsg);
+            spyOn(ComputerDao.prototype, 'add').and.throwError(errMsg);
             // Call API
             callApi(userData)
                 .end((err: Error, res: IResponse) => {
@@ -134,7 +134,7 @@ describe('Users Routes', () => {
 
         it(`should return a status code of "${OK}" if the request was successful.`, (done) => {
             // Setup spy
-            spyOn(UserDao.prototype, 'update').and.returnValue(Promise.resolve());
+            spyOn(ComputerDao.prototype, 'update').and.returnValue(Promise.resolve());
             // Call Api
             callApi(userData)
                 .end((err: Error, res: IResponse) => {
@@ -161,7 +161,7 @@ describe('Users Routes', () => {
             if the request was unsuccessful.`, (done) => {
             // Setup spy
             const updateErrMsg = 'Could not update user.';
-            spyOn(UserDao.prototype, 'update').and.throwError(updateErrMsg);
+            spyOn(ComputerDao.prototype, 'update').and.throwError(updateErrMsg);
             // Call API
             callApi(userData)
                 .end((err: Error, res: IResponse) => {
@@ -181,7 +181,7 @@ describe('Users Routes', () => {
 
         it(`should return a status code of "${OK}" if the request was successful.`, (done) => {
             // Setup spy
-            spyOn(UserDao.prototype, 'delete').and.returnValue(Promise.resolve());
+            spyOn(ComputerDao.prototype, 'delete').and.returnValue(Promise.resolve());
             // Call api
             callApi(5)
                 .end((err: Error, res: IResponse) => {
@@ -196,7 +196,7 @@ describe('Users Routes', () => {
             if the request was unsuccessful.`, (done) => {
             // Setup spy
             const deleteErrMsg = 'Could not delete user.';
-            spyOn(UserDao.prototype, 'delete').and.throwError(deleteErrMsg);
+            spyOn(ComputerDao.prototype, 'delete').and.throwError(deleteErrMsg);
             // Call Api
             callApi(1)
                 .end((err: Error, res: IResponse) => {
