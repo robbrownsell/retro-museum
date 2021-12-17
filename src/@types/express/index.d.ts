@@ -1,9 +1,9 @@
-import { IUser } from "@entities/User";
+import { IComputer } from "@entities/Computer";
 
 declare module 'express' {
     export interface Request  {
         body: {
-            user: IUser
+            computer: IComputer
         };
     }
 }

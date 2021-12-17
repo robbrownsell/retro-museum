@@ -1,16 +1,16 @@
 import { Router } from 'express';
-import { getAllUsers, addOneUser, updateOneUser, deleteOneUser } from './Users';
+import { getAllComputers, addOneComputer, updateOneComputer, deleteOneComputer } from './Computers';
 
 
-// User-route
-const userRouter = Router();
-userRouter.get('/all', getAllUsers);
-userRouter.post('/add', addOneUser);
-userRouter.put('/update', updateOneUser);
-userRouter.delete('/delete/:id', deleteOneUser);
+// Computer-route
+const computerRouter = Router();
+computerRouter.get('/all', getAllComputers);
+computerRouter.post('/add', addOneComputer);
+computerRouter.put('/update', updateOneComputer);
+computerRouter.delete('/delete/:id', deleteOneComputer);
 
 
 // Export the base-router
 const baseRouter = Router();
-baseRouter.use('/users', userRouter);
+baseRouter.use('/computers', computerRouter);
 export default baseRouter;
